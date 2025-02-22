@@ -13,7 +13,7 @@ namespace table {
     //% defaultValue.defl=0
     //% group="Create"
     export function createTable(cols: number, rows: number, defaultValue?: number): number[][] {
-        if (rows < 1 || cols < 1) return undefined; 
+        if (rows < 1 || cols < 1) return undefined;
         let table: number[][] = [];
         for (let i = 0; i < rows; i++) {
             table[i] = [];
@@ -22,6 +22,58 @@ namespace table {
             }
         }
         return table;
+    }
+
+    const directions = [
+        [1, 0],   // right
+        [0, 1],   // down
+        [-1, 0],  // left
+        [0, -1]   // up
+    ];
+
+    function carvePathIterative(maze: number[][], startX: number, startY: number) {
+        const stack = [[startX, startY]]; // Initialize the stack with the starting position
+        maze[startY][startX] = 0; // Mark the starting cell as a path
+
+        while (stack.length > 0) {
+            const [x, y] = stack.pop(); // Get the current cell
+
+            const directions = [
+                [1, 0],   // right
+                [0, 1],   // down
+                [-1, 0],  // left
+                [0, -1]   // up
+            ];
+            const shuffledDirections = directions.sort(() => Math.random() - 0.5); // Randomize directions
+
+            for (let chosenDirection of shuffledDirections) {
+                const chooseX = x + chosenDirection[0] * 2; // Move two steps in the x direction
+                const chooseY = y + chosenDirection[1] * 2; // Move two steps in the y direction
+
+                // Check if the new position is within bounds and is a wall
+                if (chooseX >= 0 && chooseX < maze[0].length && chooseY >= 0 && chooseY < maze.length && maze[chooseY][chooseX] === 1) {
+                    maze[y + chosenDirection[1]][x + chosenDirection[0]] = 0; // Remove the wall between the cells
+                    maze[chooseY][chooseX] = 0; // Mark the new cell as a path
+                    stack.push([chooseX, chooseY]); // Push the new cell onto the stack
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Creates a Maze with the given amount of `rows` and `cols`
+     * @param rows the number of rows
+     * @param cols the number of columns
+     */
+    //% block="Maze table with $rows rows and $cols cols"
+    //% rows.min=1 rows.defl=21
+    //% cols.min=1 cols.defl=21
+    //% group="Create"
+    export function createMaze(cols: number, rows: number) {
+        const maze = table.createTable(cols, rows, 1);
+        carvePathIterative(maze, 0, 0);
+        return maze;
     }
 
     /**
@@ -83,11 +135,11 @@ namespace table {
         }
     }
 
-  /**
-  * Writes the table to the led. Starting at the given `row` and `col` on the led-grid
-  * Optionally give the `row` and `col` of the cell of the table to start drawing.
-  * The defaultValue will fill the rest of the grid
-  */
+    /**
+    * Writes the table to the led. Starting at the given `row` and `col` on the led-grid
+    * Optionally give the `row` and `col` of the cell of the table to start drawing.
+    * The defaultValue will fill the rest of the grid
+    */
     //% block="Write $table| to led starting at row $gridRow and col $gridCol| selecting row $row and col $col from table or else $defaultValue"
     //% expandableArgumentMode="toggle"
     //% gridRow.min=0 gridRow.max=4 gridRow.defl=0
@@ -96,7 +148,7 @@ namespace table {
     //% col.min=0 col.defl=0
     //% group="Operations"
     export function plotAt(table: number[][], gridCol: number, gridRow: number, col: number = 0, row: number = 0, defaultValue: number = 0) {
-        if (gridRow < 0 || 
+        if (gridRow < 0 ||
             gridCol < 0 ||
             gridRow > 4 ||
             gridCol > 4) return;

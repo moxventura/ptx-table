@@ -159,5 +159,13 @@ if (runTests) {
             assert("Check led status at " + i + "," + j, expected, led.point(i, j))
         }
     }
+    let maze = table.createMaze(11,7)
+    for (let i = 0; i < 7; i++) {
+        let mazeline = "" 
+        for (let j = 0; j < 11; j++) {
+            mazeline = mazeline + maze[i][j];
+        }
+        serial.writeLine(mazeline)
+    }
     testingDone()
 }
