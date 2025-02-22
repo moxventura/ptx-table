@@ -38,13 +38,13 @@ namespace table {
         while (stack.length > 0) {
             const [x, y] = stack.pop(); // Get the current cell
 
-            const directions = [
+            const directions2 = [
                 [1, 0],   // right
                 [0, 1],   // down
                 [-1, 0],  // left
                 [0, -1]   // up
             ];
-            const shuffledDirections = directions.sort(() => Math.random() - 0.5); // Randomize directions
+            const shuffledDirections = directions2.sort(() => Math.random() - 0.5); // Randomize directions
 
             for (let chosenDirection of shuffledDirections) {
                 const chooseX = x + chosenDirection[0] * 2; // Move two steps in the x direction
@@ -118,7 +118,7 @@ namespace table {
     //% row.min=0 row.defl=0
     //% col.min=0 col.defl=0
     //% group="Operations"
-    export function plot(table: number[][], col: number = 0, row: number = 0, defaultValue: number = 0) {
+    export function plot(table: number[][], col: number, row: number, defaultValue: number) {
         for (let k = 0; k < 5; k++) {
             for (let l = 0; l < 5; l++) {
                 let value = getValue(table, row + k, col + l);

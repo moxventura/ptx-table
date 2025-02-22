@@ -56,7 +56,7 @@ if (runTests) {
     assert("Table has -10 value at 0,0", -10, m[0][0])
     assert("getValue returns -10 value at 0,0", -10, table.getValue(m, 0, 0))
     serial.writeLine("Plot table and check led status")
-    table.plot(m)
+    table.plot(m,0,0,0)
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
             let expected = true
@@ -70,7 +70,7 @@ if (runTests) {
         }
     }
     serial.writeLine("Plot table from 1,1 and check led status")
-    table.plot(m, 1, 1)
+    table.plot(m, 1, 1, 0)
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
             let expected = true
@@ -134,7 +134,7 @@ if (runTests) {
     serial.writeLine("Create 3, 4 table with defaultValue 8 and plot")
 
     let n = table.createTable(3, 4, 8)
-    table.plot(n)
+    table.plot(n,0,0,0)
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
             let expected = false
@@ -146,7 +146,7 @@ if (runTests) {
     }
     serial.writeLine("Set value of 2,1 to off")
     table.setValue(n, 2, 1, 0)
-    table.plot(n)
+    table.plot(n,0,0,0)
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
             let expected = false
