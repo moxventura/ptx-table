@@ -12,7 +12,8 @@ namespace table {
     //% expandableArgumentMode="toggle"
     //% defaultValue.defl=0
     //% group="Create"
-    export function createTable(rows: number, cols: number, defaultValue?: number): number[][] {
+    export function createTable(cols: number, rows: number, defaultValue?: number): number[][] {
+        if (rows < 1 || cols < 1) return undefined; 
         let table: number[][] = [];
         for (let i = 0; i < rows; i++) {
             table[i] = [];
@@ -32,7 +33,7 @@ namespace table {
     //% row.min=0
     //% col.min=0
     //% group="Access"
-    export function setValue(table: number[][], row: number, col: number, value: number): void {
+    export function setValue(table: number[][], col: number, row: number, value: number): void {
         if (table[row] && table[row][col] !== undefined) {
             table[row][col] = value;
         }
@@ -48,7 +49,7 @@ namespace table {
     //% row.min=0
     //% col.min=0
     //% group="Access"
-    export function getValue(table: number[][], row: number, col: number): number {
+    export function getValue(table: number[][], col: number, row: number): number {
         if (table[row] && table[row][col] !== undefined) {
             return table[row][col];
         }
@@ -65,7 +66,7 @@ namespace table {
     //% row.min=0 row.defl=0
     //% col.min=0 col.defl=0
     //% group="Operations"
-    export function plot(table: number[][], row: number = 0, col: number = 0, defaultValue: number = 0) {
+    export function plot(table: number[][], col: number = 0, row: number = 0, defaultValue: number = 0) {
         for (let k = 0; k < 5; k++) {
             for (let l = 0; l < 5; l++) {
                 let value = getValue(table, row + k, col + l);
@@ -73,10 +74,10 @@ namespace table {
                     value = defaultValue;
                 }
                 if (value && value != 0) {
-                    led.plot(l, k);
+                    led.plot(k, l);
                 }
                 else {
-                    led.unplot(l, k);
+                    led.unplot(k, l);
                 }
             }
         }
@@ -89,24 +90,30 @@ namespace table {
   */
     //% block="Write $table| to led starting at row $gridRow and col $gridCol| selecting row $row and col $col from table or else $defaultValue"
     //% expandableArgumentMode="toggle"
+    //% gridRow.min=0 gridRow.max=4 gridRow.defl=0
+    //% gridCol.min=0 gridcol.max=4 gridCol.defl=0
     //% row.min=0 row.defl=0
     //% col.min=0 col.defl=0
     //% group="Operations"
-    export function plotAt(table: number[][], gridRow: number, gridCol: number, row: number = 0, col: number = 0, defaultValue: number = 0) {
+    export function plotAt(table: number[][], gridCol: number, gridRow: number, col: number = 0, row: number = 0, defaultValue: number = 0) {
+        if (gridRow < 0 || 
+            gridCol < 0 ||
+            gridRow > 4 ||
+            gridCol > 4) return;
         for (let m = 0; m < 5; m++) {
             for (let n = 0; n < 5; n++) {
                 let plotAtValue = defaultValue;
                 if (m >= gridRow && n >= gridCol) {
-                    plotAtValue = getValue(table, row + m - gridRow, col + n - gridCol);
+                    plotAtValue = getValue(table, col + m - gridCol, row + n - gridRow);
                 }
                 if (plotAtValue == undefined) {
                     plotAtValue = defaultValue;
                 }
                 if (plotAtValue && plotAtValue != 0) {
-                    led.plot(n, m);
+                    led.plot(m, n);
                 }
                 else {
-                    led.unplot(n, m);
+                    led.unplot(m, n);
                 }
             }
         }
