@@ -1,5 +1,3 @@
-//% color="#AA278D" weight=50 icon="\uf0ce" block="Tables" advanced=true
-//% groups=['Create', 'Access', 'Operations']
 namespace table {
 
     /**
@@ -58,44 +56,6 @@ namespace table {
     }
 
     /**
-     * Gets a row from the table or `undefined` if the given row does not exist
-     * @param table the table to get the value from
-     * @param row the row number
-     */
-    //% block="from table $table get row $row"
-    //% row.min=0
-    //% group="Access"
-    export function getRow(table: number[][], row: number): number[] {
-        if (table[row] !== undefined) {
-            return table[row];
-        }
-        return undefined;
-    }
-
-    /**
-     * Gets a column from the table or `undefined` if the given column does not exist
-     * @param table the table to get the value from
-     * @param col the column number
-     */
-    //% block="from table $table get column $col"
-    //% col.min=0
-    //% group="Access"
-    export function getColumn(table: number[][], col: number): number[] | undefined {
-        if (table.length === 0 || col < 0) {
-            return undefined;
-        }
-
-        const column: number[] = [];
-        for (let row = 0; row < table.length; row++) {
-            if (table[row][col] !== undefined) {
-                column.push(table[row][col]);
-            }
-        }
-
-        return column.length > 0 ? column : undefined;
-    }
-
-    /**
      * Writes the table to the led.
      * Optionally give the `row` and `col` of the cell to start drawing.
      * The starting cell would come in the top left corner
@@ -106,17 +66,47 @@ namespace table {
     //% col.min=0 col.defl=0
     //% group="Operations"
     export function plot(table: number[][], row: number = 0, col: number = 0, defaultValue: number = 0) {
-        for (let i = 0; i < 5; i++) {
-            for (let j = 0; j < 5; j++) {
-                let value = getValue(table, row + i, col + j);
+        for (let k = 0; k < 5; k++) {
+            for (let l = 0; l < 5; l++) {
+                let value = getValue(table, row + k, col + l);
                 if (value == undefined) {
                     value = defaultValue;
                 }
                 if (value && value != 0) {
-                    led.plot(j, i);
+                    led.plot(l, k);
                 }
                 else {
-                    led.unplot(j, i);
+                    led.unplot(l, k);
+                }
+            }
+        }
+    }
+
+  /**
+  * Writes the table to the led. Starting at the given `row` and `col` on the led-grid
+  * Optionally give the `row` and `col` of the cell of the table to start drawing.
+  * The defaultValue will fill the rest of the grid
+  */
+    //% block="Write $table| to led starting at row $gridRow and col $gridCol| selecting row $row and col $col from table or else $defaultValue"
+    //% expandableArgumentMode="toggle"
+    //% row.min=0 row.defl=0
+    //% col.min=0 col.defl=0
+    //% group="Operations"
+    export function plotAt(table: number[][], gridRow: number, gridCol: number, row: number = 0, col: number = 0, defaultValue: number = 0) {
+        for (let m = 0; m < 5; m++) {
+            for (let n = 0; n < 5; n++) {
+                let plotAtValue = defaultValue;
+                if (m >= gridRow && n >= gridCol) {
+                    plotAtValue = getValue(table, row + m - gridRow, col + n - gridCol);
+                }
+                if (plotAtValue == undefined) {
+                    plotAtValue = defaultValue;
+                }
+                if (plotAtValue && plotAtValue != 0) {
+                    led.plot(n, m);
+                }
+                else {
+                    led.unplot(n, m);
                 }
             }
         }
