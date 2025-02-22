@@ -56,7 +56,7 @@ if (runTests) {
     assert("Table has -10 value at 0,0", -10, m[0][0])
     assert("getValue returns -10 value at 0,0", -10, table.getValue(m, 0, 0))
     serial.writeLine("Plot table and check led status")
-    table.plot(m,0,0,0)
+    table.plot(m, 0, 0, 0)
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
             let expected = true
@@ -134,7 +134,7 @@ if (runTests) {
     serial.writeLine("Create 3, 4 table with defaultValue 8 and plot")
 
     let n = table.createTable(3, 4, 8)
-    table.plot(n,0,0,0)
+    table.plot(n, 0, 0, 0)
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
             let expected = false
@@ -144,9 +144,21 @@ if (runTests) {
             assert("Check led status at " + i + "," + j, expected, led.point(i, j))
         }
     }
+
+    serial.writeLine("Create 3, 4 table with defaultValue 8 and plot at 1,0")
+    table.plotAt(n, 1, 0, 0, 0, 0)
+    for (let i = 0; i < 5; i++) {
+        for (let j = 0; j < 5; j++) {
+            let expected = false
+            if (i > 0 && i < 4 && j < 4) {
+                expected = true
+            }
+            assert("Check led status at " + i + "," + j, expected, led.point(i, j))
+        }
+    }
     serial.writeLine("Set value of 2,1 to off")
     table.setValue(n, 2, 1, 0)
-    table.plot(n,0,0,0)
+    table.plot(n, 0, 0, 0)
     for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
             let expected = false
@@ -159,9 +171,9 @@ if (runTests) {
             assert("Check led status at " + i + "," + j, expected, led.point(i, j))
         }
     }
-    let maze = table.createMaze(11,7)
+    let maze = table.createMaze(11, 7)
     for (let i = 0; i < 7; i++) {
-        let mazeline = "" 
+        let mazeline = ""
         for (let j = 0; j < 11; j++) {
             mazeline = mazeline + maze[i][j];
         }

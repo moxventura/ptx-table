@@ -155,7 +155,7 @@ namespace table {
         for (let m = 0; m < 5; m++) {
             for (let n = 0; n < 5; n++) {
                 let plotAtValue = defaultValue;
-                if (m >= gridRow && n >= gridCol) {
+                if (m >= gridCol && n >= gridRow) {
                     plotAtValue = getValue(table, col + m - gridCol, row + n - gridRow);
                 }
                 if (plotAtValue == undefined) {
